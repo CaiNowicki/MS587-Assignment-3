@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Greetings, {{ name }}</title>
+    </head>
+    <body>
+        <h1>Greetings, {{ name }}</h1>
+        <p>We are so glad you are here today!</p>
+        <p>Only the first paragraph of each title is available for audio listening yet, and only for the first 10 titles. More are coming!</p>
+        <h2>Available books:</h2>
+        <ul>
+            {% for book in books %}
+            <li>
+                {{ book.title }}
+                <a href ="{{ url_for('read', filename=book.path) }}">Read</a> |
+                <a href ="{{ url_for('download', filename=book.path)}}">Download</a>
+                <a href ="{{ url_for('listen', filename=book.path)}}">Listen (first paragraph only)</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>
