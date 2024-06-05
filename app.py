@@ -1,7 +1,28 @@
-from flask import Flask, send_file, render_template_string, render_template, request, redirect, url_for
+from flask import Flask, send_file,  render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
 import os
 
 app = Flask(__name__)
+username = 'CaiNowicki'
+password = 'databasepassword'
+hostname = 'CaiNowicki.mysql.pythonanywhere-services.com'
+database_name = 'CaiNowicki$AnimorphsUsers'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{username}:{password}@{hostname}/{database_name}'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+# Define the User model
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), unique=True, nullable=False)
+
+# Create the database and the User table if it doesn't exist
+with app.app_context():
+    if not db.engine.has_table('user'):
+        db.create_all()
+
 
 @app.route('/')
 def index():
@@ -10,7 +31,21 @@ def index():
 @app.route('/submit_name', methods=['POST'])
 def submit_name():
     name = request.form['name']
-    return redirect(url_for('greet', name=name))
+    user = User.query.filter_by(name=name).first()
+    if user:
+        return redirect(url_for('greet', name=name))
+    else:
+        return redirect(url_for('new_user', name=name))
+
+@app.route('/new_user/<name>', methods=['GET', 'POST'])
+def new_user(name):
+    if request.method == 'POST':
+        new_user = User(name=name)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('greet', name=name))
+    return render_template('new_user.html', name=name)
+
 
 @app.route('/greet/<name>')
 def greet(name):

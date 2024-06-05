@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>New User</title>
+</head>
+<body>
+  <h1>Create a New Account</h1>
+  <form action="{{ url_for('new_user', name=name) }}" method="POST">
+    <p>Name: {{ name }}</p>
+    <button type="submit">Create Account</button>
+  </form>
+</body>
+</html>
