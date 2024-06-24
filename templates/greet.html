@@ -1,22 +1,26 @@
 <!doctype html>
 <html>
-    <head>
-        <title>Greetings, {{ name }}</title>
-    </head>
-    <body>
-        <h1>Greetings, {{ name }}</h1>
-        <p>We are so glad you are here today!</p>
-        <p>Only the first paragraph of each title is available for audio listening yet, and only for the first 10 titles. More are coming!</p>
-        <h2>Available books:</h2>
-        <ul>
-            {% for book in books %}
-            <li>
-                {{ book.title }}
-                <a href ="{{ url_for('read', filename=book.path) }}">Read</a> |
-                <a href ="{{ url_for('download', filename=book.path)}}">Download</a>
-                <a href ="{{ url_for('listen', filename=book.path)}}">Listen (first paragraph only)</a>
-            </li>
-            {% endfor %}
-        </ul>
-    </body>
+<head>
+    <title>Greetings, {{ name }}</title>
+</head>
+<body>
+    <h1>Greetings, {{ name }}</h1>
+    <p>We are so glad you are here today!</p>
+    <p>Only the first paragraph of each title is available for audio listening yet, and only for the first 10 titles. More are coming!</p>
+    <h2>Available books:</h2>
+    <ul>
+        {% for book in books %}
+        <li>
+            {{ book.col_book_title }}
+            <a href="{{ url_for('read', filename=book.col_book_path) }}">Read</a> |
+            <a href="{{ url_for('download', filename=book.col_book_path) }}">Download</a> |
+            {% if book.col_book_audio %}
+            <a href="{{ url_for('listen', filename=book.col_book_audio) }}">Listen (first paragraph only)</a>
+        {% else %}
+            No audio available
+        {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</body>
 </html>
