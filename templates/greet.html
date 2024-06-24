@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Greetings, {{ name }}</title>
@@ -6,21 +6,32 @@
 <body>
     <h1>Greetings, {{ name }}</h1>
     <p>We are so glad you are here today!</p>
-    <p>Only the first paragraph of each title is available for audio listening yet, and only for the first 10 titles. More are coming!</p>
+    <p>Only the first paragraph of each title is available for audio listening yet, and only for the first few titles. More are coming!</p>
+    <h2>Welcome, {{ name }}!</h2>
+    <p>You have submitted {{ reviews_count }} reviews/rankings. Would you like to <a href="{{ url_for('add_review', name=name) }}">add a review</a>?</p>
+    
     <h2>Available books:</h2>
-    <ul>
+    <div class="books">
         {% for book in books %}
-        <li>
-            {{ book.col_book_title }}
+        <div class="book">
+            {% if book.col_book_cover %}
+                <img src="{{ book.col_book_cover }}" alt="Cover image for {book.col_book_title}" width="100" height="100" runat="server">
+                
+            {% else %}
+                <p>No cover image available</p>
+            {% endif %}
+            <span>{{ book.col_book_title }}</span>
+            <br>
+            <p>Image URL: {{ book.col_book_cover }}</p>
             <a href="{{ url_for('read', filename=book.col_book_path) }}">Read</a> |
             <a href="{{ url_for('download', filename=book.col_book_path) }}">Download</a> |
             {% if book.col_book_audio %}
             <a href="{{ url_for('listen', filename=book.col_book_audio) }}">Listen (first paragraph only)</a>
-        {% else %}
+            {% else %}
             No audio available
-        {% endif %}
-        </li>
+            {% endif %}
+        </div>
         {% endfor %}
-    </ul>
+    </div>
 </body>
 </html>
